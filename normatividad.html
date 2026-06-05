@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Huellas Vivas · Normatividad</title>
+    <link rel="stylesheet" href="css/estilo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Mismos estilos que ARCHIVO_DOCUMENTAL.html */
+        .repositorio-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .buscador-section {
+            background: #fefcf5;
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            border: 1px solid #e8e6e1;
+        }
+        
+        .buscador-input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid #e8e6e1;
+            border-radius: 50px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s;
+        }
+        
+        .buscador-input:focus {
+            outline: none;
+            border-color: #939947;
+        }
+        
+        .filtros-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .filtro-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filtro-group label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6c757d;
+        }
+        
+        .filtro-group select, .filtro-group input {
+            padding: 0.7rem;
+            border: 1px solid #e8e6e1;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .boton-buscar {
+            background: #939947;
+            color: #031015;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 2rem;
+        }
+        
+        .boton-buscar:hover {
+            background: #d6db7b;
+        }
+        
+        .resultados-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e8e6e1;
+        }
+        
+        .grid-resultados {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .tarjeta-expediente {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 6px solid #939947;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .tarjeta-expediente:hover {
+            transform: translateX(4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .expediente-tipo {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #939947;
+            margin-bottom: 0.75rem;
+        }
+        
+        .expediente-titulo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #031015;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        
+        .expediente-metadatos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+        
+        .expediente-metadatos span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: #4a4a4a;
+        }
+        
+        .expediente-signatura {
+            font-family: monospace;
+            font-size: 0.8rem;
+            background: #f4f6f7;
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            color: #8b3c2a;
+        }
+        
+        .expediente-resumen {
+            font-size: 0.85rem;
+            color: #4a4a4a;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .expediente-estado {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #e8e6e1;
+        }
+        
+        .estado-acceso {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: #2c7a4a;
+        }
+        
+        .enlace-documento {
+            background: none;
+            border: 1px solid #939947;
+            color: #031015;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .enlace-documento:hover {
+            background: #939947;
+            color: white;
+        }
+        
+        .sin-resultados {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            .repositorio-container {
+                padding: 0 1rem;
+            }
+            .expediente-titulo {
+                font-size: 1.2rem;
+            }
+            .expediente-estado {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar-principal">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <a href="index.html">
+                <span class="logo-text">HUELLAS VIVAS</span>
+                <span class="logo-subtitle">Memoria y Dignidad</span>
+            </a>
+        </div>
+        
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <div class="navbar-menu" id="navbar-menu">
+            <ul>
+                <li><a href="index.html" class="nav-link">Inicio</a></li>
+                
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link">Archivo Documental <span class="dropdown-arrow">›</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="ARCHIVO_DOCUMENTAL.html">Todos los documentos</a></li>
+                        <li><a href="NORMATIVIDAD.html">Normatividad</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=comunidades">Comunidades</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=clasificacion">Clasificación</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=tipologias">Tipologías</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=multimedia">Multimedia</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=recientes">Recientes</a></li>
+                    </ul>
+                </li>
+                
+                <li><a href="MAPA_MEMORIA.html" class="nav-link">Mapa de la Memoria</a></li>
+                <li><a href="LINEA_TIEMPO.html" class="nav-link">Línea de Tiempo</a></li>
+                <li><a href="RUTA_MEMORIA.html" class="nav-link">Rutas de la Memoria</a></li>
+                <li><a href="MICROSITIOS.html" class="nav-link">Micrositios</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="hero" style="background: #274a68;">
+        <div class="hero-col hero-titulo">
+            <h1 style="color:#f4f6f7;">Normatividad</h1>
+            <p style="color:#d6db7b;">Instrumentos internacionales y marco legal para la protección de archivos y derechos humanos</p>
+        </div>
+    </section>
+
+    <div class="repositorio-container">
+        <div class="buscador-section">
+            <input type="text" id="buscadorTexto" class="buscador-input" placeholder="🔍 Buscar por título, descripción, palabras clave...">
+            
+            <div class="filtros-grid">
+                <div class="filtro-group">
+                    <label>Tipo de instrumento</label>
+                    <select id="filtroTipo">
+                        <option value="todos">Todos</option>
+                        <option value="Constitución">Constituciones</option>
+                        <option value="Tratado internacional">Tratados internacionales</option>
+                        <option value="Convención">Convenciones</option>
+                        <option value="Protocolo">Protocolos</option>
+                        <option value="Instrumento internacional">Instrumentos internacionales</option>
+                    </select>
+                </div>
+                
+                <div class="filtro-group">
+                    <label>Año</label>
+                    <select id="filtroAnio">
+                        <option value="todos">Todos</option>
+                        <option value="1968">1968</option>
+                        <option value="1972">1972</option>
+                        <option value="1986">1986</option>
+                        <option value="1991">1991</option>
+                        <option value="1994">1994</option>
+                        <option value="2002">2002</option>
+                        <option value="2005">2005</option>
+                        <option value="2010">2010</option>
+                    </select>
+                </div>
+                
+                <div class="filtro-group">
+                    <label>Palabra clave</label>
+                    <input type="text" id="filtroPalabraClave" placeholder="Ej: verdad, archivos, tortura...">
+                </div>
+            </div>
+            
+            <button id="btnBuscar" class="boton-buscar">🔍 Aplicar filtros</button>
+        </div>
+        
+        <div class="resultados-info">
+            <div id="resultadosCount">Mostrando 9 resultados</div>
+        </div>
+        
+        <div id="resultadosContainer" class="grid-resultados"></div>
+    </div>
+</main>
+
+<section class="social-section" aria-label="Redes sociales del proyecto">
+    <div class="social-icons">
+        <a href="https://wa.me/tu-numero" target="_blank"><img src="assets/iconos/whats.png" alt="WhatsApp"></a>
+        <a href="https://www.linkedin.com/in/tu-perfil" target="_blank"><img src="assets/iconos/linkedin.png" alt="LinkedIn"></a>
+        <a href="https://www.instagram.com/tu-perfil" target="_blank"><img src="assets/iconos/insta.png" alt="Instagram"></a>
+        <a href="https://twitter.com/tu-perfil" target="_blank"><img src="assets/iconos/x.png" alt="X"></a>
+        <a href="https://www.youtube.com/tu-canal" target="_blank"><img src="assets/iconos/youtube.png" alt="YouTube"></a>
+        <a href="https://www.facebook.com/tu-perfil" target="_blank"><img src="assets/iconos/face.png" alt="Facebook"></a>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-contenido">
+        <div class="footer-enlaces">
+            <h3>EXPLORAR</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="ARCHIVO_DOCUMENTAL.html">Archivo documental</a></li>
+                <li><a href="MAPA_MEMORIA.html">Mapa de la memoria</a></li>
+                <li><a href="RUTA_MEMORIA.html">Rutas de la memoria</a></li>
+                <li><a href="LINEA_TIEMPO.html">Línea de tiempo</a></li>
+                <li><a href="MICROSITIOS.html">Micrositios</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>SOBRE EL PORTAL</h3>
+            <ul>
+                <li><a href="#" id="footer-que-es">Nuestra historia</a></li>
+                <li><a href="#" id="footer-equipo">Nuestro equipo</a></li>
+                <li><a href="#" id="footer-colaborar">Cómo colaborar</a></li>
+                <li><a href="#">Instituciones aliadas</a></li>
+                <li><a href="#" id="footer-contacto">Contacto</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>SOBRE EL REPOSITORIO</h3>
+            <ul>
+                <li><a href="#">Depósito asistido</a></li>
+                <li><a href="#">Derechos de autor y propiedad intelectual</a></li>
+                <li><a href="#">Solicitud para el repositorio</a></li>
+                <li><a href="#">Autorización de depósito</a></li>
+                <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>LEGAL</h3>
+            <ul>
+                <li><a href="#">Política de privacidad</a></li>
+                <li><a href="#">Términos de uso</a></li>
+                <li><a href="#">Glosario</a></li>
+                <li><a href="#">Accesibilidad</a></li>
+                <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>© 2026 Huellas vivas - diseño y montaje ALCAZUL</p>
+        <p>Bogotá, Colombia · <a href="mailto:contacto@huellasvivas.org">contacto@huellasvivas.org</a></p>
+    </div>
+</footer>
+
+<div id="footer-modal">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3 id="modal-title">Información</h3>
+            <span class="modal-close" id="modal-close">&times;</span>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    // Instrumentos normativos (9)
+    const normas = [
+        { titulo: "Constitución Política de Colombia (1991) - Arts. 15, 20, 23, 74", tipo: "Constitución", año: 1991, autores: "Asamblea Nacional Constituyente", organizacion: "República de Colombia", descripcion: "Consagra a Colombia como Estado Social de Derecho. Define los derechos fundamentales a la intimidad, a recibir información veraz, a presentar peticiones y a acceder a los documentos públicos.", url: "http://www.secretariasenado.gov.co/index.php/constitucion-politica", cdd: "340", palabrasClave: ["constitución", "derechos fundamentales", "acceso a la información", "archivos públicos"] },
+        { titulo: "Pacto Internacional de Derechos Civiles y Políticos (PIDCP) - Ley 74 de 1968", tipo: "Tratado internacional", año: 1968, autores: "ONU", organizacion: "Naciones Unidas", descripcion: "Establece el derecho a la verdad y a la justicia, fundamentando el acceso a la información como parte del debido proceso y la reparación integral para las víctimas.", url: "https://www.ohchr.org/es/instruments-mechanisms/instruments/international-covenant-civil-and-political-rights", cdd: "341.5", palabrasClave: ["derechos civiles", "derechos políticos", "verdad", "justicia"] },
+        { titulo: "Convención Americana sobre Derechos Humanos (Pacto de San José) - Ley 16 de 1972", tipo: "Convención", año: 1972, autores: "OEA", organizacion: "Organización de Estados Americanos", descripcion: "Consagra el derecho a la verdad (art. 13) y la obligación estatal de investigar violaciones graves de DDHH. Clave en casos de desaparición forzada.", url: "https://www.cidh.oas.org/basicos/spanish/basicos2.htm", cdd: "341.5", palabrasClave: ["derechos humanos", "verdad", "desaparición forzada", "investigación"] },
+        { titulo: "Convención contra la Tortura - Ley 70 de 1986", tipo: "Convención", año: 1986, autores: "ONU", organizacion: "Naciones Unidas", descripcion: "Obliga a los Estados a investigar y documentar delitos de tortura. Los archivos se convierten en prueba forense vital para acreditar crímenes de tortura en el marco del conflicto.", url: "https://www.ohchr.org/es/instruments-mechanisms/instruments/convention-against-torture-and-other-cruel-inhuman-or-degrading", cdd: "341.5", palabrasClave: ["tortura", "investigación", "prueba forense", "crímenes"] },
+        { titulo: "Convención sobre Desapariciones Forzadas - Ley 1418 de 2010", tipo: "Convención", año: 2010, autores: "ONU", organizacion: "Naciones Unidas", descripcion: "Fundamental para archivos de DDHH. Establece el derecho de las familias a conocer el paradero de los desaparecidos, convirtiendo los archivos en un derecho humano exigible.", url: "https://www.ohchr.org/es/instruments-mechanisms/instruments/international-convention-protection-all-persons-enforced", cdd: "341.5", palabrasClave: ["desaparición forzada", "archivos", "derecho a la verdad", "familias"] },
+        { titulo: "Estatuto de Roma de la CPI - Ley 742 de 2002", tipo: "Tratado internacional", año: 2002, autores: "Corte Penal Internacional", organizacion: "ONU", descripcion: "Define crímenes de guerra y de lesa humanidad, exigiendo la preservación de pruebas documentales para la persecución penal internacional.", url: "https://www.icc-cpi.int/es/romestatute", cdd: "341.5", palabrasClave: ["CPI", "crímenes de guerra", "lesa humanidad", "pruebas documentales"] },
+        { titulo: "Protocolo II Adicional a los Convenios de Ginebra - Ley 171 de 1994", tipo: "Protocolo", año: 1994, autores: "Comité Internacional de la Cruz Roja", organizacion: "CICR", descripcion: "Dado que el conflicto colombiano es de carácter no internacional, este protocolo rige la protección de la población civil y los registros de víctimas.", url: "https://www.icrc.org/es/doc/assets/files/other/icrc_003_0321.pdf", cdd: "341.5", palabrasClave: ["conflicto no internacional", "población civil", "registros de víctimas"] },
+        { titulo: "Convenio 169 de la OIT - Ley 21 de 1991", tipo: "Convención", año: 1991, autores: "OIT", organizacion: "Organización Internacional del Trabajo", descripcion: "Garantiza el derecho a la consulta previa y a la autodeterminación informativa. Los archivos digitales deben respetar protocolos de datos étnicos y consentimiento comunitario.", url: "https://www.ilo.org/es/resource/convenio-169-de-la-oit", cdd: "341.5", palabrasClave: ["pueblos indígenas", "consulta previa", "datos étnicos", "consentimiento"] },
+        { titulo: "Principios Actualizados para la lucha contra la impunidad (Principios Joinet/Orentlicher, 2005)", tipo: "Instrumento internacional", año: 2005, autores: "ONU", organizacion: "Comisión de Derechos Humanos", descripcion: "Estándar internacional de soft law. Establecen el derecho inalienable a la verdad, la obligación de preservar archivos y la creación de comisiones de la verdad.", url: "https://www.ohchr.org/es/instruments-mechanisms/instruments/updated-set-principles-protection-and-promotion-human-rights-through", cdd: "341.5", palabrasClave: ["impunidad", "derecho a la verdad", "archivos", "comisiones de la verdad"] }
+    ];
+
+    let resultadosFiltrados = [...normas];
+    let paginaActual = 1;
+    const resultadosPorPagina = 10;
+
+    const buscadorTexto = document.getElementById('buscadorTexto');
+    const filtroTipo = document.getElementById('filtroTipo');
+    const filtroAnio = document.getElementById('filtroAnio');
+    const filtroPalabraClave = document.getElementById('filtroPalabraClave');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const resultadosContainer = document.getElementById('resultadosContainer');
+    const resultadosCount = document.getElementById('resultadosCount');
+
+    function filtrarDocumentos() {
+        const textoBusqueda = buscadorTexto.value.toLowerCase();
+        const tipo = filtroTipo.value;
+        const anio = filtroAnio.value;
+        const palabraClave = filtroPalabraClave.value.toLowerCase();
+
+        resultadosFiltrados = normas.filter(doc => {
+            let coincideTexto = true;
+            if (textoBusqueda) {
+                coincideTexto = doc.titulo.toLowerCase().includes(textoBusqueda) ||
+                    doc.descripcion.toLowerCase().includes(textoBusqueda);
+            }
+            
+            let coincideTipo = true;
+            if (tipo !== 'todos') {
+                coincideTipo = doc.tipo === tipo;
+            }
+            
+            let coincideAnio = true;
+            if (anio !== 'todos') {
+                coincideAnio = doc.año === parseInt(anio);
+            }
+            
+            let coincidePalabraClave = true;
+            if (palabraClave) {
+                coincidePalabraClave = doc.palabrasClave.some(p => p.toLowerCase().includes(palabraClave));
+            }
+            
+            return coincideTexto && coincideTipo && coincideAnio && coincidePalabraClave;
+        });
+        
+        renderizarResultados();
+    }
+
+    function renderizarResultados() {
+        const total = resultadosFiltrados.length;
+        resultadosCount.innerHTML = `Mostrando ${total} resultados`;
+        
+        if (resultadosFiltrados.length === 0) {
+            resultadosContainer.innerHTML = '<div class="sin-resultados">No se encontraron instrumentos normativos con los filtros seleccionados.</div>';
+            return;
+        }
+        
+        resultadosContainer.innerHTML = resultadosFiltrados.map(doc => {
+            const procedenciaTexto = doc.organizacion ? `${doc.autores} · ${doc.organizacion}` : doc.autores;
+            
+            return `
+                <div class="tarjeta-expediente">
+                    <div class="expediente-tipo">[${doc.tipo.toUpperCase()}]</div>
+                    <div class="expediente-titulo">${doc.titulo}</div>
+                    <div class="expediente-metadatos">
+                        <span>📅 ${doc.año}</span>
+                        <span>🏛️ ${procedenciaTexto.substring(0, 60)}</span>
+                    </div>
+                    <div class="expediente-signatura">🔖 ${doc.cdd}</div>
+                    <div class="expediente-resumen">📄 ${doc.descripcion}</div>
+                    <div class="expediente-estado">
+                        <div class="estado-acceso">
+                            🟢 Digitalizado
+                        </div>
+                        <div class="expediente-idioma">
+                            🌐 Español / Inglés
+                        </div>
+                        <a href="${doc.url}" class="enlace-documento" target="_blank" rel="noopener noreferrer">📂 Acceder al documento →</a>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    btnBuscar.addEventListener('click', filtrarDocumentos);
+    
+    let timeoutBuscador;
+    buscadorTexto.addEventListener('input', () => {
+        clearTimeout(timeoutBuscador);
+        timeoutBuscador = setTimeout(filtrarDocumentos, 500);
+    });
+    
+    if (filtroPalabraClave) {
+        filtroPalabraClave.addEventListener('input', () => {
+            clearTimeout(timeoutBuscador);
+            timeoutBuscador = setTimeout(filtrarDocumentos, 500);
+        });
+    }
+    
+    filtrarDocumentos();
+</script>
+
+<script src="js/main.js"></script>
+</body>
+</html>

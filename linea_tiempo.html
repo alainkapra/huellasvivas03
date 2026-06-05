@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Huellas Vivas · Línea de Tiempo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilo.css">
+    
+    <style>
+        /* ===== ESTILOS EXCLUSIVOS PARA LÍNEA DE TIEMPO ===== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #0f0f25 100%);
+            color: #e0e0e8;
+            overflow-x: hidden;
+        }
+        
+        /* Navbar personalizada */
+        .navbar-principal {
+            position: relative !important;
+            background: rgba(10, 10, 26, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(100, 150, 200, 0.2);
+        }
+        
+        .navbar-principal .logo-text,
+        .navbar-principal .logo-subtitle,
+        .navbar-principal .nav-link {
+            color: #e0e0e8 !important;
+        }
+        
+        /* Hero animado */
+        .hero-timeline {
+            min-height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
+        }
+        
+        .hero-timeline::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(124, 184, 224, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-timeline h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e0e0e8 0%, #7cb8e0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-timeline p {
+            font-size: 1.2rem;
+            color: #9ab8d4;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #7cb8e0;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #8a9abb;
+        }
+        
+        /* ===== LÍNEA DE TIEMPO HORIZONTAL MODERNA ===== */
+        .timeline-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+        
+        /* Línea horizontal */
+        .timeline-horizontal {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .timeline-track {
+            position: relative;
+            height: 4px;
+            background: rgba(124, 184, 224, 0.2);
+            border-radius: 4px;
+            margin: 4rem 0;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(90deg, #7cb8e0, #d6db7b);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Nodos */
+        .timeline-nodes {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .timeline-node {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .node-marker {
+            width: 16px;
+            height: 16px;
+            background: #7cb8e0;
+            border-radius: 50%;
+            margin: 0 auto 1rem auto;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 0 0 rgba(124, 184, 224, 0.4);
+        }
+        
+        .timeline-node.active .node-marker {
+            transform: scale(1.5);
+            box-shadow: 0 0 0 8px rgba(124, 184, 224, 0.2);
+        }
+        
+        .timeline-node:hover .node-marker {
+            transform: scale(1.3);
+        }
+        
+        .node-year {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #8a9abb;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-node.active .node-year {
+            color: #7cb8e0;
+            font-size: 1.4rem;
+        }
+        
+        .node-title {
+            font-size: 0.8rem;
+            color: #6a7a9a;
+            margin-top: 0.3rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .timeline-node:hover .node-title,
+        .timeline-node.active .node-title {
+            opacity: 1;
+        }
+        
+        /* ===== TARJETA DE EVENTO ===== */
+        .event-card-container {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(254, 255, 254, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 3px solid rgb(244, 246, 246);
+            transition: all 0.4s ease;
+        }
+        
+        .event-card {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .event-icon {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            background: rgb(170, 90, 10);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(11, 11, 11, 0.3);
+        }
+        
+        .event-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #7cb8e0;
+        }
+        
+        .event-info {
+            flex: 1;
+        }
+        
+        .event-year-large {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #32ac0a;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-title {
+            font-size: 3rem;
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            color: #070707;
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #053867;
+            margin-bottom: 1rem;
+        }
+        
+        .event-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #050505;
+            margin-bottom: 1rem;
+        }
+        
+        .event-context {
+            background: rgb(141, 3, 120);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 3px solid #fafbfd;
+            margin-bottom: 5rem;
+            font-size: 0.9rem;
+            color: #fcfcfd;
+        }
+        
+        .event-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+        
+        .event-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(11, 78, 122, 0.574);
+            border: 1px solid rgba(250, 251, 252, 0.978);
+            border-radius: 30px;
+            color: #fafdfe;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .event-link:hover {
+            background: rgb(141, 3, 120);
+            transform: translateY(-2px);
+        }
+        
+        .event-source {
+            font-size: 0.7rem;
+            color: #f9fafb;
+            margin-top: 1rem;
+            text-align: right;
+        }
+        
+        /* ===== NAVEGACIÓN ENTRE EVENTOS ===== */
+        .event-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgb(249, 250, 251);
+        }
+        
+        .nav-btn {
+            background: rgb(252, 253, 253);
+            border: 1px solid rgb(249, 251, 252);
+            padding: 0.75rem 1.5rem;
+            border-radius: 40px;
+            color: #7cb8e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-btn:hover {
+            background: rgb(141, 3, 120);
+            transform: translateX(-3px);
+        }
+        
+        .nav-btn.next:hover {
+            transform: translateX(3px);
+        }
+        
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .event-counter {
+            font-size: 0.85rem;
+            color: #8a9abb;
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-timeline h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                gap: 1.5rem;
+            }
+            
+            .timeline-nodes {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            
+            .timeline-node {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .node-marker {
+                margin: 0;
+            }
+            
+            .node-year {
+                font-size: 1rem;
+            }
+            
+            .node-title {
+                opacity: 1;
+                font-size: 0.7rem;
+            }
+            
+            .timeline-track {
+                display: none;
+            }
+            
+            .event-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .event-icon {
+                margin: 0 auto;
+            }
+            
+            .event-title {
+                font-size: 1.5rem;
+            }
+            
+            .event-year-large {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .timeline-wrapper {
+                padding: 2rem 1rem;
+            }
+            
+            .hero-timeline {
+                min-height: 50vh;
+            }
+            
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar-principal">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <a href="index.html">
+                <span class="logo-text">HUELLAS VIVAS</span>
+                <span class="logo-subtitle">Memoria y Dignidad</span>
+            </a>
+        </div>
+        
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <div class="navbar-menu" id="navbar-menu">
+            <ul>
+                <li><a href="index.html" class="nav-link">Inicio</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link">Archivo Documental <span class="dropdown-arrow">›</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="ARCHIVO_DOCUMENTAL.html">Todos los documentos</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=comunidades">Comunidades</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=clasificacion">Clasificación</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=tipologias">Tipologías</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=multimedia">Multimedia</a></li>
+                    </ul>
+                </li>
+                <li><a href="MAPA_MEMORIA.html" class="nav-link">Mapa de la Memoria</a></li>
+                <li><a href="LINEA_TIEMPO.html" class="nav-link">Línea de Tiempo</a></li>
+                <li><a href="RUTA_MEMORIA.html" class="nav-link">Rutas de la Memoria</a></li>
+                <li><a href="MICROSITIOS.html" class="nav-link">Micrositios</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="hero-timeline">
+        <div class="hero-content">
+            <img src="assets/imagenes/LG01.png" width="150" height="auto" alt="Logo">
+            <h1>Línea del <i>Tiempo</i></h1>
+            <p>Un recorrido por los momentos clave que marcaron la memoria histórica de Colombia</p>
+            
+        </div>
+    </section>
+
+    <div class="timeline-wrapper">
+        <div class="timeline-horizontal">
+            <div class="timeline-track">
+                <div class="timeline-progress" id="timelineProgress"></div>
+            </div>
+            
+            <div class="timeline-nodes" id="timelineNodes"></div>
+        </div>
+        
+        <div class="event-card-container" id="eventCardContainer">
+            <!-- El contenido se genera dinámicamente con JS -->
+        </div>
+    </div>
+</main>
+
+<section class="social-section" aria-label="Redes sociales del proyecto">
+    <div class="social-icons">
+        <a href="https://wa.me/" target="_blank"><img src="assets/iconos/whats.png" alt="WhatsApp"></a>
+        <a href="https://www.linkedin.com/" target="_blank"><img src="assets/iconos/linkedin.png" alt="LinkedIn"></a>
+        <a href="https://www.instagram.com/" target="_blank"><img src="assets/iconos/insta.png" alt="Instagram"></a>
+        <a href="https://twitter.com/" target="_blank"><img src="assets/iconos/x.png" alt="X"></a>
+        <a href="https://www.youtube.com/" target="_blank"><img src="assets/iconos/youtube.png" alt="YouTube"></a>
+        <a href="https://www.facebook.com/" target="_blank"><img src="assets/iconos/face.png" alt="Facebook"></a>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-contenido">
+        <div class="footer-enlaces">
+            <h3>EXPLORAR</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="ARCHIVO_DOCUMENTAL.html">Archivo documental</a></li>
+                <li><a href="MAPA_MEMORIA.html">Mapa de la memoria</a></li>
+                <li><a href="RUTA_MEMORIA.html">Rutas de la memoria</a></li>
+                <li><a href="LINEA_TIEMPO.html">Línea de tiempo</a></li>
+                <li><a href="MICROSITIOS.html">Micrositios</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>SOBRE EL PORTAL</h3>
+            <ul>
+                <li><a href="#" id="footer-que-es">Nuestra historia</a></li>
+                <li><a href="#" id="footer-equipo">Nuestro equipo</a></li>
+                <li><a href="#" id="footer-colaborar">Cómo colaborar</a></li>
+                <li><a href="#">Instituciones aliadas</a></li>
+                <li><a href="#" id="footer-contacto">Contacto</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>SOBRE EL REPOSITORIO</h3>
+            <ul>
+                <li><a href="#">Depósito asistido</a></li>
+                <li><a href="#">Derechos de autor y propiedad intelectual</a></li>
+                <li><a href="#">Solicitud para el repositorio</a></li>
+                <li><a href="#">Autorización de depósito</a></li>
+                <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>LEGAL</h3>
+            <ul>
+                <li><a href="#">Política de privacidad</a></li>
+                <li><a href="#">Términos de uso</a></li>
+                <li><a href="#">Glosario</a></li>
+                <li><a href="#">Accesibilidad</a></li>
+                <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>© 2026 Huellas vivas - diseño y montaje ALCAZUL</p>
+        <p>Bogotá, Colombia · <a href="mailto:contacto@huellasvivas.org">contacto@huellasvivas.org</a></p>
+    </div>
+</footer>
+
+<div id="footer-modal">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3 id="modal-title">Información</h3>
+            <span class="modal-close" id="modal-close">&times;</span>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    // ===== DATOS DE EVENTOS CON ENLACES VERIFICADOS Y FUNCIONALES =====
+    const eventos = [
+        {
+            id: 0,
+            year: "1948",
+            title: "Bogotazo",
+            subtitle: "9 de abril de 1948",
+            shortDesc: "El asesinato de Jorge Eliécer Gaitán desencadenó una violenta insurrección popular que marcó el inicio del conflicto armado moderno en Colombia.",
+            fullDesc: "El Bogotazo es considerado el parteaguas del conflicto armado colombiano. Las protestas dejaron miles de muertos, la destrucción del centro histórico de Bogotá y dieron origen a la violencia bipartidista que se extendió por décadas, conocida como 'La Violencia' (1948-1958).",
+            context: "Jorge Eliécer Gaitán era el candidato presidencial del Partido Liberal con mayor opción de victoria en las elecciones de 1948. Su carisma y liderazgo popular lo convertían en una figura transformadora para el país. El Archivo Central de la Universidad Nacional conserva recortes de prensa de la época documentando el suceso.",
+            url: "https://gestiondocumental.unal.edu.co/los-titulares-del-bogotazo/",
+            source: "Archivo Central e Histórico - Universidad Nacional de Colombia",
+            color: "#f43f5e",
+            icon: "clock"
+        },
+        {
+            id: 1,
+            year: "1958",
+            title: "Frente Nacional",
+            subtitle: "Acuerdo de alternación política",
+            shortDesc: "Liberalismo y conservadurismo acuerdan alternarse el poder durante 16 años, excluyendo a otras fuerzas políticas.",
+            fullDesc: "El Frente Nacional (1958-1974) fue un pacto bipartidista que buscó poner fin a 'La Violencia'. Estableció la alternación presidencial y la paridad en cargos públicos, pero excluyó a movimientos alternativos, lo que generaría descontento y el surgimiento de guerrillas. Durante estas elecciones fueron elegidas por primera vez mujeres al Congreso de Colombia.",
+            context: "El acuerdo fue ratificado mediante el plebiscito del 1 de diciembre de 1957, con una participación ciudadana masiva. Este pacto dio estabilidad política pero también generó exclusiones que alimentaron futuros conflictos armados.",
+            url: "http://hdl.handle.net/20.500.12749/28212",
+            source: "Repositorio Institucional - Universidad Autónoma de Bucaramanga (UNAB)",
+            color: "#f59e0b",
+            icon: "chart"
+        },
+        {
+            id: 2,
+            year: "1964",
+            title: "Nacimiento de las FARC",
+            subtitle: "Operación Marquetalia",
+            shortDesc: "El gobierno atacó las 'repúblicas independientes' campesinas, dando origen a la guerrilla más antigua de América Latina.",
+            fullDesc: "El 18 de mayo de 1964, el Ejército Nacional, por orden del presidente Guillermo León Valencia, lanzó la 'Operación Marquetalia' con el fin de retomar el control de las llamadas 'Repúblicas Independientes' organizadas por las guerrillas. El 20 de julio de 1964, la resistencia de Marquetalia redactó el 'Programa Agrario de los Guerrilleros', primer documento programático de la organización insurgente que posteriormente sería conocida como las FARC-EP.",
+            context: "Las 'repúblicas independientes' eran zonas de colonización campesina donde el Estado tenía poca presencia. En el marco de la Doctrina de Seguridad Nacional impulsada por Estados Unidos durante la Guerra Fría, el gobierno colombiano atacó estas zonas consideradas 'enclaves comunistas'. Los sobrevivientes, incluyendo a Manuel Marulanda Vélez ('Tirofijo') y Jacobo Arenas, reorganizaron la resistencia armada.",
+            url: "https://bapp.com.co/fase-exploratoria/#fase-de-conversaciones",
+            source: "Biblioteca Abierta del Proceso de Paz colombiano",
+            color: "#84cc16",
+            icon: "mail"
+        },
+        {
+            id: 3,
+            year: "1985",
+            title: "Toma del Palacio de Justicia",
+            subtitle: "6 y 7 de noviembre de 1985",
+            shortDesc: "El M-19 tomó el Palacio de Justicia. La retoma militar dejó más de 100 víctimas y 11 desaparecidos forzados.",
+            fullDesc: "Más de 100 personas murieron y 11 permanecen desaparecidas. En 2014, la Corte Interamericana de Derechos Humanos condenó al Estado colombiano por violaciones a los derechos humanos, reconociendo la desaparición forzada de 12 personas y la ejecución extrajudicial del Magistrado Carlos Horacio Urán.",
+            context: "La operación militar de retoma incluyó el uso de tanques de guerra y artillería pesada sobre el edificio. El M-19 exigía un juicio público al presidente Belisario Betancur por supuestos incumplimientos de acuerdos de paz. El informe de la Comisión de la Verdad contiene testimonios directos, incluyendo la declaración del expresidente Betancourt.",
+            url: "https://caracol.com.co/2025/11/05/las-voces-del-holocausto-que-guarda-el-centro-de-memoria-del-palacio-de-justicia/",
+            source: "Caracol Radio / Centro de Memoria del Holocausto",
+            color: "#06b6d4",
+            icon: "gears"
+        },
+        {
+            id: 4,
+            year: "1991",
+            title: "Nueva Constitución",
+            subtitle: "4 de julio de 1991",
+            shortDesc: "Promulgación de la Constitución Política que reemplazó a la de 1886, estableciendo a Colombia como Estado Social de Derecho.",
+            fullDesc: "La Constitución de 1991 creó la acción de tutela para la protección de derechos fundamentales, reconoció la diversidad étnica y cultural del país, y estableció mecanismos de participación ciudadana como el referendo, la consulta popular y el cabildo abierto.",
+            context: "Surgió del movimiento estudiantil de la 'Séptima Papeleta', que impulsó una Asamblea Nacional Constituyente elegida por voto popular. Fue uno de los procesos constituyentes más participativos de América Latina.",
+            url: "https://pdba.georgetown.edu/Constitutions/Colombia/col91.html",
+            source: "Universidad de Georgetown - Political Database of the Americas",
+            color: "#3b82f6",
+            icon: "chat"
+        },
+        {
+            id: 5,
+            year: "2002",
+            title: "Masacre de Bojayá",
+            subtitle: "2 de mayo de 2002",
+            shortDesc: "Un cilindro bomba impactó la iglesia donde se refugiaban más de 300 personas. 79 personas murieron, incluyendo 48 menores de edad.",
+            fullDesc: "En medio de los enfrentamientos entre la guerrilla de las FARC y los paramilitares de las AUC, un cilindro bomba lanzado por las FARC impactó la iglesia de Bellavista donde se refugiaban cerca de 300 personas. La masacre causó la muerte de 79 personas, incluyendo 48 menores de edad.",
+            context: "La masacre evidencia el impacto desproporcionado del conflicto en las comunidades afrocolombianas del Medio Atrato. Este caso es emblemático por los procesos de memoria colectiva y las luchas por la reparación y la verdad en la región.",
+            url: "https://www.redalyc.org/journal/5515/551562456006/html/",
+            source: "Revista Colombiana de Sociología (Universidad Nacional de Colombia)",
+            color: "#a855f7",
+            icon: "mapPin"
+        },
+        {
+            id: 6,
+            year: "2005",
+            title: "Ley de Justicia y Paz",
+            subtitle: "Ley 975 de 2005",
+            shortDesc: "Marco legal para la desmovilización de grupos paramilitares, con penas alternativas y reparación a víctimas.",
+            fullDesc: "La Ley 975 de 2005 tiene por objeto facilitar los procesos de paz y la reincorporación a la vida civil de miembros de grupos armados al margen de la ley, garantizando los derechos de las víctimas a la verdad, la justicia y la reparación. Crea un sistema judicial transicional, ofreciendo penas alternativas (5 a 8 años) para quienes, habiéndose desmovilizado, contribuyan decisivamente a la reconciliación nacional.",
+            context: "Durante el gobierno de Álvaro Uribe Vélez, esta ley se promulgó en el marco del proceso de paz con las AUC, de las cuales se desmovilizaron más de 30,000 miembros entre 2003 y 2006. Fue la primera ley de justicia transicional en Colombia.",
+            url: "https://www.fiscalia.gov.co/colombia/wp-content/uploads/2012/04/ley_975_de_2005.pdf",
+            source: "Fiscalía General de la Nación de Colombia",
+            color: "#ec4899",
+            icon: "book"
+        },
+        {
+            id: 7,
+            year: "2016",
+            title: "Acuerdo de Paz",
+            subtitle: "24 de noviembre de 2016",
+            shortDesc: "Firma del Acuerdo Final entre el gobierno de Juan Manuel Santos y las FARC-EP, tras más de 50 años de conflicto.",
+            fullDesc: "El Acuerdo Final incluyó seis puntos fundamentales: Reforma Rural Integral, Participación Política, Fin del Conflicto, Solución al Problema de las Drogas Ilícitas, Sistema Integral de Verdad, Justicia, Reparación y No Repetición (SIVJRNR), y Mecanismos de Implementación y Verificación.",
+            context: "Tras el plebiscito del 2 de octubre de 2016, donde ganó el 'No', se renegociaron algunos puntos del acuerdo. El acuerdo firmado fue reconocido internacionalmente como modelo de resolución de conflictos.",
+            url: "https://herramientaspedagogicas.jep.gov.co/catedra-nacional/plan-tematico-2025/modulo-4/sesion-5-el-acuerdo-de-paz-de-2016/",
+            source: "Jurisdicción Especial para la Paz (JEP) - Cátedra Nacional",
+            color: "#10b981",
+            icon: "shield"
+        },
+        {
+            id: 8,
+            year: "2022",
+            title: "Comisión de la Verdad",
+            subtitle: "28 de junio de 2022",
+            shortDesc: "Presentación del informe final 'Hay futuro si hay verdad', un compendio de hallazgos sobre el conflicto armado.",
+            fullDesc: "El informe incluye hallazgos sobre responsabilidades del conflicto, análisis de patrones de violencia y más de 100 recomendaciones para evitar la repetición. Fue el resultado de 4 años de trabajo con más de 30,000 víctimas.",
+            context: "Creada en el Acuerdo de Paz de 2016 como parte del Sistema Integral de Verdad, Justicia, Reparación y No Repetición (SIVJRNR). Es la primera comisión de la verdad en la historia de Colombia.",
+            url: "https://www.comisiondelaverdad.co/",
+            source: "Comisión para el Esclarecimiento de la Verdad (CEV)",
+            color: "#f97316",
+            icon: "flag"
+        }
+    ];
+
+    // ===== ICONOS SVG =====
+    const icons = {
+        clock: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+        chart: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+        mail: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`,
+        gears: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`,
+        chat: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`,
+        mapPin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+        book: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>`,
+        shield: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`,
+        flag: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>`
+    };
+
+    let currentIndex = 0;
+
+    // Renderizar nodos de la línea de tiempo
+    function renderTimelineNodes() {
+        const container = document.getElementById('timelineNodes');
+        container.innerHTML = '';
+        
+        eventos.forEach((evento, idx) => {
+            const node = document.createElement('div');
+            node.className = `timeline-node ${idx === currentIndex ? 'active' : ''}`;
+            node.setAttribute('data-idx', idx);
+            node.innerHTML = `
+                <div class="node-marker" style="background: ${evento.color}; box-shadow: 0 0 0 0 ${evento.color}40;"></div>
+                <div class="node-year">${evento.year}</div>
+                <div class="node-title">${evento.title}</div>
+            `;
+            node.addEventListener('click', () => {
+                currentIndex = idx;
+                renderTimelineNodes();
+                renderEventCard();
+                updateProgressBar();
+                scrollToEventCard();
+            });
+            container.appendChild(node);
+        });
+    }
+
+    // Renderizar tarjeta del evento actual
+    function renderEventCard() {
+        const evento = eventos[currentIndex];
+        const container = document.getElementById('eventCardContainer');
+        
+        container.innerHTML = `
+            <div class="event-card">
+                <div class="event-icon" style="border-color: ${evento.color}40; background: ${evento.color}10;">
+                    ${icons[evento.icon]}
+                </div>
+                <div class="event-info">
+                    <div class="event-year-large" style="color: ${evento.color}">${evento.year}</div>
+                    <div class="event-title">${evento.title}</div>
+                    <div class="event-subtitle">${evento.subtitle}</div>
+                    <div class="event-description">${evento.fullDesc}</div>
+                    <div class="event-context">
+                        <strong>Contexto histórico:</strong> ${evento.context}
+                    </div>
+                    <div class="event-links">
+                        <a href="${evento.url}" class="event-link" target="_blank" rel="noopener noreferrer">
+                            📄 Ver documento original
+                        </a>
+                    </div>
+                    <div class="event-source">
+                        Fuente: ${evento.source}
+                    </div>
+                </div>
+            </div>
+            <div class="event-navigation">
+                <button class="nav-btn prev" id="prevBtn" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+                <div class="event-counter">${currentIndex + 1} de ${eventos.length}</div>
+                <button class="nav-btn next" id="nextBtn" ${currentIndex === eventos.length - 1 ? 'disabled' : ''}>Siguiente →</button>
+            </div>
+        `;
+        
+        // Eventos de navegación
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        if (prevBtn && !prevBtn.disabled) {
+            prevBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    renderTimelineNodes();
+                    renderEventCard();
+                    updateProgressBar();
+                    scrollToEventCard();
+                }
+            });
+        }
+        
+        if (nextBtn && !nextBtn.disabled) {
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < eventos.length - 1) {
+                    currentIndex++;
+                    renderTimelineNodes();
+                    renderEventCard();
+                    updateProgressBar();
+                    scrollToEventCard();
+                }
+            });
+        }
+    }
+
+    // Actualizar barra de progreso
+    function updateProgressBar() {
+        const progress = document.getElementById('timelineProgress');
+        if (progress) {
+            const percentage = (currentIndex / (eventos.length - 1)) * 100;
+            progress.style.width = `${percentage}%`;
+        }
+    }
+
+    // Función para desplazar suavemente hacia la tarjeta de resultados
+    function scrollToEventCard() {
+        const eventCard = document.querySelector('.event-card-container');
+        if (eventCard) {
+            const offset = 100;
+            const elementPosition = eventCard.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - offset;
+            
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Inicializar
+    renderTimelineNodes();
+    renderEventCard();
+    updateProgressBar();
+
+    // ===== MODAL PARA FOOTER =====
+    const modal = document.getElementById('footer-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = document.getElementById('modal-close');
+
+    function openModal(title, content) {
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalBody) modalBody.innerHTML = content;
+        if (modal) modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    const footerLinks = {
+        'footer-que-es': {
+            title: 'Nuestra historia',
+            content: '<p>Huellas Vivas nace en 2024 como un archivo digital de memoria histórica y derechos humanos en Colombia. Recopilamos documentos, testimonios y fotografías para que ninguna víctima sea olvidada.</p>'
+        },
+        'footer-equipo': {
+            title: 'Nuestro equipo',
+            content: '<p>Somos un equipo interdisciplinario de historiadores, comunicadores, diseñadores y activistas comprometidos con la memoria y la verdad.</p>'
+        },
+        'footer-colaborar': {
+            title: 'Cómo colaborar',
+            content: '<p>Puedes colaborar donando documentos, testimonios o recursos económicos. Escríbenos a contacto@huellasvivas.org para más información.</p>'
+        },
+        'footer-contacto': {
+            title: 'Contacto',
+            content: '<p>Email: contacto@huellasvivas.org<br>Bogotá, Colombia<br>Tel: +57 1 234 5678</p>'
+        }
+    };
+
+    for (const [id, data] of Object.entries(footerLinks)) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(data.title, data.content);
+            });
+        }
+    }
+
+    // ===== MENÚ MÓVIL =====
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const navbarMenu = document.getElementById('navbar-menu');
+    
+    if (navbarToggle && navbarMenu) {
+        navbarToggle.addEventListener('click', () => {
+            navbarMenu.classList.toggle('active');
+            document.body.style.overflow = navbarMenu.classList.contains('active') ? 'hidden' : '';
+        });
+    }
+    
+    const navLinks = document.querySelectorAll('.navbar-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navbarMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+    
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (link) {
+            link.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
