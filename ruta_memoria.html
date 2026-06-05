@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Huellas Vivas · Rutas de la Memoria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilo.css">
+    
+    <style>
+        /* ===== ESTILOS EXCLUSIVOS PARA RUTAS DE LA MEMORIA ===== */
+        /* IDENTIDAD: GAMA DE NARANJAS */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a0a05 0%, #2a1508 100%);
+            color: #f0e0d0;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Navbar personalizada - tonos naranja oscuro */
+        .navbar-principal {
+            position: relative !important;
+            background: rgba(26, 10, 5, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 140, 60, 0.3);
+        }
+        
+        .navbar-principal .logo-text,
+        .navbar-principal .logo-subtitle,
+        .navbar-principal .nav-link {
+            color: #f0d0a0 !important;
+        }
+        
+        .navbar-principal .logo-text:hover,
+        .navbar-principal .nav-link:hover {
+            color: #ffaa55 !important;
+        }
+        
+        /* Hero animado - gradiente naranja */
+        .hero-rutas {
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a0a05 0%, #3a2008 100%);
+        }
+        
+        .hero-rutas::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 140, 60, 0.15) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-content img {
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(255, 140, 60, 0.3));
+        }
+        
+        .hero-rutas h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f0d0a0 0%, #ff8c3c 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .hero-rutas p {
+            font-size: 1.2rem;
+            color: #d0a070;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Sección de desarrollo */
+        .desarrollo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .desarrollo-card {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(30, 15, 8, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            border: 3px solid rgba(255, 140, 60, 0.5);
+            max-width: 700px;
+            margin: 0 auto;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(255, 100, 20, 0.2);
+        }
+        
+        .desarrollo-card:hover {
+            border-color: rgba(255, 140, 60, 0.9);
+            box-shadow: 0 15px 40px rgba(255, 100, 20, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .desarrollo-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 140, 60, 0.5));
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        
+        .desarrollo-card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffaa55;
+            margin-bottom: 1rem;
+        }
+        
+        .desarrollo-card p {
+            font-size: 1.1rem;
+            color: #d0a070;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .desarrollo-progreso {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 140, 60, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+        
+        .desarrollo-progreso-bar {
+            width: 35%;
+            height: 100%;
+            background: linear-gradient(90deg, #ffaa55, #ff6a20);
+            border-radius: 10px;
+            animation: progresoAnim 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progresoAnim {
+            0% { width: 25%; opacity: 0.7; }
+            100% { width: 45%; opacity: 1; }
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero-rutas h1 {
+                font-size: 2.5rem;
+            }
+            
+            .desarrollo-card {
+                padding: 2rem 1.5rem;
+                border-radius: 30px;
+            }
+            
+            .desarrollo-card h2 {
+                font-size: 1.8rem;
+            }
+            
+            .desarrollo-icon {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .desarrollo-container {
+                padding: 2rem 1rem;
+            }
+            
+            .hero-rutas {
+                min-height: 50vh;
+            }
+            
+            .hero-rutas h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar-principal">
+    <div class="navbar-container">
+        <div class="navbar-logo">
+            <a href="index.html">
+                <span class="logo-text">HUELLAS VIVAS</span>
+                <span class="logo-subtitle">Memoria y Dignidad</span>
+            </a>
+        </div>
+        
+        <button class="navbar-toggle" id="navbar-toggle" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        
+        <div class="navbar-menu" id="navbar-menu">
+            <ul>
+                <li><a href="index.html" class="nav-link">Inicio</a></li>
+                <li class="nav-dropdown">
+                    <a href="#" class="nav-link">Archivo Documental <span class="dropdown-arrow">›</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="ARCHIVO_DOCUMENTAL.html">Todos los documentos</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=comunidades">Comunidades</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=clasificacion">Clasificación</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=tipologias">Tipologías</a></li>
+                        <li><a href="ARCHIVO_DOCUMENTAL.html?seccion=multimedia">Multimedia</a></li>
+                    </ul>
+                </li>
+                <li><a href="MAPA_MEMORIA.html" class="nav-link">Mapa de la Memoria</a></li>
+                <li><a href="LINEA_TIEMPO.html" class="nav-link">Línea de Tiempo</a></li>
+                <li><a href="RUTA_MEMORIA.html" class="nav-link">Rutas de la Memoria</a></li>
+                <li><a href="MICROSITIOS.html" class="nav-link">Micrositios</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <section class="hero-rutas">
+        <div class="hero-content">
+            <img src="assets/imagenes/LG01.png" width="150" height="auto" alt="Logo">
+            <h1>Rutas de la <i>Memoria</i></h1>
+            <p>Recorridos testimoniales por lugares simbólicos del conflicto y la resistencia</p>
+        </div>
+    </section>
+
+    <div class="desarrollo-container">
+        <div class="desarrollo-card">
+            <div class="desarrollo-icon">🚧</div>
+            <h2>En desarrollo</h2>
+            <p>Esta sección se encuentra en construcción.<br>Pronto podrás explorar las rutas de memoria, recorridos testimoniales y lugares simbólicos del conflicto armado en Colombia.</p>
+            <div class="desarrollo-progreso">
+                <div class="desarrollo-progreso-bar"></div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<section class="social-section" aria-label="Redes sociales del proyecto">
+    <div class="social-icons">
+        <a href="https://wa.me/" target="_blank"><img src="assets/iconos/whats.png" alt="WhatsApp"></a>
+        <a href="https://www.linkedin.com/" target="_blank"><img src="assets/iconos/linkedin.png" alt="LinkedIn"></a>
+        <a href="https://www.instagram.com/" target="_blank"><img src="assets/iconos/insta.png" alt="Instagram"></a>
+        <a href="https://twitter.com/" target="_blank"><img src="assets/iconos/x.png" alt="X"></a>
+        <a href="https://www.youtube.com/" target="_blank"><img src="assets/iconos/youtube.png" alt="YouTube"></a>
+        <a href="https://www.facebook.com/" target="_blank"><img src="assets/iconos/face.png" alt="Facebook"></a>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-contenido">
+        <div class="footer-enlaces">
+            <h3>EXPLORAR</h3>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="ARCHIVO_DOCUMENTAL.html">Archivo documental</a></li>
+                <li><a href="MAPA_MEMORIA.html">Mapa de la memoria</a></li>
+                <li><a href="RUTA_MEMORIA.html">Rutas de la memoria</a></li>
+                <li><a href="LINEA_TIEMPO.html">Línea de tiempo</a></li>
+                <li><a href="MICROSITIOS.html">Micrositios</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>SOBRE EL PORTAL</h3>
+            <ul>
+                <li><a href="#" id="footer-que-es">Nuestra historia</a></li>
+                <li><a href="#" id="footer-equipo">Nuestro equipo</a></li>
+                <li><a href="#" id="footer-colaborar">Cómo colaborar</a></li>
+                <li><a href="#">Instituciones aliadas</a></li>
+                <li><a href="#" id="footer-contacto">Contacto</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>SOBRE EL REPOSITORIO</h3>
+            <ul>
+                <li><a href="#">Depósito asistido</a></li>
+                <li><a href="#">Derechos de autor y propiedad intelectual</a></li>
+                <li><a href="#">Solicitud para el repositorio</a></li>
+                <li><a href="#">Autorización de depósito</a></li>
+                <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+        </div>
+        <div class="footer-enlaces">
+            <h3>LEGAL</h3>
+            <ul>
+                <li><a href="#">Política de privacidad</a></li>
+                <li><a href="#">Términos de uso</a></li>
+                <li><a href="#">Glosario</a></li>
+                <li><a href="#">Accesibilidad</a></li>
+                <li><a href="#">Preguntas frecuentes</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>© 2026 Huellas vivas - diseño y montaje ALCAZUL</p>
+        <p>Bogotá, Colombia · <a href="mailto:contacto@huellasvivas.org">contacto@huellasvivas.org</a></p>
+    </div>
+</footer>
+
+<div id="footer-modal">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3 id="modal-title">Información</h3>
+            <span class="modal-close" id="modal-close">&times;</span>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<script>
+    // ===== MODAL PARA FOOTER =====
+    const modal = document.getElementById('footer-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const modalClose = document.getElementById('modal-close');
+
+    function openModal(title, content) {
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalBody) modalBody.innerHTML = content;
+        if (modal) modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        if (modal) modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    const footerLinks = {
+        'footer-que-es': {
+            title: 'Nuestra historia',
+            content: '<p>Huellas Vivas nace en 2024 como un archivo digital de memoria histórica y derechos humanos en Colombia. Recopilamos documentos, testimonios y fotografías para que ninguna víctima sea olvidada.</p>'
+        },
+        'footer-equipo': {
+            title: 'Nuestro equipo',
+            content: '<p>Somos un equipo interdisciplinario de historiadores, comunicadores, diseñadores y activistas comprometidos con la memoria y la verdad.</p>'
+        },
+        'footer-colaborar': {
+            title: 'Cómo colaborar',
+            content: '<p>Puedes colaborar donando documentos, testimonios o recursos económicos. Escríbenos a contacto@huellasvivas.org para más información.</p>'
+        },
+        'footer-contacto': {
+            title: 'Contacto',
+            content: '<p>Email: contacto@huellasvivas.org<br>Bogotá, Colombia<br>Tel: +57 1 234 5678</p>'
+        }
+    };
+
+    for (const [id, data] of Object.entries(footerLinks)) {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal(data.title, data.content);
+            });
+        }
+    }
+
+    // ===== MENÚ MÓVIL =====
+    const navbarToggle = document.getElementById('navbar-toggle');
+    const navbarMenu = document.getElementById('navbar-menu');
+    
+    if (navbarToggle && navbarMenu) {
+        navbarToggle.addEventListener('click', () => {
+            navbarMenu.classList.toggle('active');
+            document.body.style.overflow = navbarMenu.classList.contains('active') ? 'hidden' : '';
+        });
+    }
+    
+    const navLinks = document.querySelectorAll('.navbar-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navbarMenu.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+    
+    const dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        if (link) {
+            link.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
